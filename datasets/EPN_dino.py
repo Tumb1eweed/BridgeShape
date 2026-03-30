@@ -69,7 +69,7 @@ def load_data_from_files(intrinsic_file_path, extrinsic_file_path, subfolder_pat
     intrinsics = torch.from_numpy(intrinsics).float()  # [6, 3, 3]
     extrinsics = torch.from_numpy(extrinsics).float()  # [6, 3, 4]
     scale=torch.tensor(scale)
-    # 返回加载的所有数据
+    
     return depth_imgs, normal_imgs, intrinsics, extrinsics,scale
 
 
