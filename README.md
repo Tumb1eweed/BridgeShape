@@ -14,12 +14,13 @@ Official implementation of the paper **"BridgeShape: Latent Diffusion Schröding
 
 ## 🛠️ Environments
 
-You can easily set up and activate a conda environment for this project by using the following commands:
+This repository is currently set up to work directly in an existing Python environment. We recommend Python 3.12 and installing dependencies with `pip`:
 
 ```bash
-conda env create -f environment.yml
-conda activate bridgeshape
+pip install -r requirements.txt
 ```
+
+The provided `environment.yml` is kept as a dependency reference, but the project no longer depends on recreating the original Conda-based `Python 3.8 + CUDA 11.3` environment.
 
 ## 📂 Data Construction
 
