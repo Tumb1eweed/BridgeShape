@@ -16,18 +16,23 @@ def get_shape_sdf(path):
 
 if __name__ == '__main__':
 
-    base_df_path = "/3d_epn/shapenet_dim32_df"
-    out_df_path = "/3d_epn/shapenet_dim32_df_npy"
-    base_sdf_path = "/3d_epn/shapenet_dim32_sdf"
-    out_sdf_path = "/3d_epn/shapenet_dim32_sdf_npy"
+    data_root = "/root/autodl-tmp/datasets"
+    base_df_path = osp.join(data_root, "shapenet_dim32_df")
+    out_df_path = osp.join(data_root, "shapenet_dim32_df_npy")
+    base_sdf_path = osp.join(data_root, "shapenet_dim32_sdf")
+    out_sdf_path = osp.join(data_root, "shapenet_dim32_sdf_npy")
     
     clss = ['02933112', '04530566', '03636649', '02691156', '02958343', '04379243', '04256520', '03001627']
 
-    # Process df files
+    # Only keep GT files that are actually referenced by the available partial SDF set.
     for cls in clss:
         df_path = osp.join(base_df_path, cls)
-        df_files = os.listdir(df_path)
-        for df_file in df_files:
+        sdf_path = osp.join(base_sdf_path, cls)
+        sdf_files = os.listdir(sdf_path)
+        gt_files = {sdf_file[:-4][:-3] + '0__.df' for sdf_file in sdf_files}
+        for df_file in gt_files:
+            if not osp.exists(osp.join(df_path, df_file)):
+                continue
             df_name = df_file[:-3]
             df = get_shape_df(osp.join(df_path, df_file))
             out_cls_path = osp.join(out_df_path, cls)
@@ -35,7 +40,7 @@ if __name__ == '__main__':
             out_file = osp.join(out_cls_path, df_name + '.npy')
             np.save(out_file, df)
 
-    # Process sdf files
+    # Process the available partial SDF files as-is.
     for cls in clss:
         sdf_path = osp.join(base_sdf_path, cls)
         sdf_files = os.listdir(sdf_path)
@@ -48,6 +53,4 @@ if __name__ == '__main__':
             os.makedirs(out_cls_path, exist_ok=True)
             out_file = osp.join(out_cls_path, sdf_name + '.npy')
             np.save(out_file, sdf)
-
-
 

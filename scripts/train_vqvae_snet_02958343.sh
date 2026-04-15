@@ -34,7 +34,7 @@ vq_cfg="../configs/vqvae_snet.yaml"
 ### dataset stuff ###
 max_dataset_size=10000000
 dataset_mode='ControlledEPNDataset_32'
-data_root="/workspace/EPN/control_data"
+data_root="/root/autodl-tmp/datasets/control_data"
 res=32
 cat='all'
 # cat='chair'

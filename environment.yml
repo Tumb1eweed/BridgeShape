@@ -1,14 +1,18 @@
 name: bridgeshape
 dependencies:
-  - python>=3.12
+  - python=3.10
   - pip
+  - pytorch=2.4.1
+  - torchvision=0.19.1
+  - torchaudio=2.4.1
+  - pytorch-cuda=12.1
+  - pytorch3d=0.7.8
+  - iopath
+  - fvcore
   - pip:
-    - torch
-    - torchvision
-    - torchaudio
-    - pytorch-lightning
-    - open3d
-    - numpy
+    - pytorch-lightning==2.6.1
+    - open3d==0.19.0
+    - numpy==2.2.6
     - pillow
     - jupyter
     - ipython
@@ -46,3 +50,8 @@ dependencies:
     - plyfile
     - k3d
     - trimesh
+    - einops==0.8.2
+    - omegaconf==2.3.0
+    - loguru==0.7.3
+    - ema-pytorch==0.7.9
+    - point-cloud-utils==0.34.0

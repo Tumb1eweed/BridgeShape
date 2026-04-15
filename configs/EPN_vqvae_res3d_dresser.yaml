@@ -2,7 +2,7 @@ vqvae:
   vq_conf: configs/vqvae_snet.yaml
   vq_ckpt: logs_home_32/vqvae-ControlledEPNDataset_32-02933112dresser-all-res32-LR1e-4-T3.0-release/ckpt/vqvae_steps-180000.pth
 data:
-  data_root: /workspace/EPN/control_data
+  data_root: /root/autodl-tmp/datasets/control_data
   workers: 4
   per_class: True
   class_id: '02933112'

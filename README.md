@@ -14,13 +14,27 @@ Official implementation of the paper **"BridgeShape: Latent Diffusion Schröding
 
 ## 🛠️ Environments
 
-This repository is currently set up to work directly in an existing Python environment. We recommend Python 3.12 and installing dependencies with `pip`:
+The verified environment for this repository is a Conda environment named `bridgeshape` with `Python 3.10`, `PyTorch 2.4.1`, `CUDA 12.1`, and the prebuilt `PyTorch3D 0.7.8` package.
+
+Create the environment with:
 
 ```bash
+conda create -n bridgeshape -y python=3.10
+conda install -n bridgeshape -y -c pytorch3d -c pytorch -c nvidia -c conda-forge \
+    pytorch=2.4.1 torchvision=0.19.1 torchaudio=2.4.1 \
+    pytorch-cuda=12.1 pytorch3d=0.7.8 iopath fvcore
+conda activate bridgeshape
 pip install -r requirements.txt
 ```
 
-The provided `environment.yml` is kept as a dependency reference, but the project no longer depends on recreating the original Conda-based `Python 3.8 + CUDA 11.3` environment.
+This setup has been validated on the current codebase. We do not recommend using `Python 3.12` with the latest default `torch` packages here, because `pytorch3d` binary compatibility becomes unreliable and often falls back to a local source build.
+
+The provided `environment.yml` matches this validated environment and can also be used directly:
+
+```bash
+conda env create -f environment.yml
+conda activate bridgeshape
+```
 
 ## 📂 Data Construction
 
@@ -30,29 +44,52 @@ To run the default setting with a resolution of 32³, download the necessary dat
 
 To prepare the data:
 
-Run ```data/sdf_2_npy.py``` to convert the raw files into ```.npy``` format for easier handling.
+Run `data/sdf_2_npy.py` to convert the raw files into `.npy` format for easier handling.
 
-Run ```data/npy_2_pth.py``` to generate the paired data for the eight object classes used for model training.
+Run `data/npy_2_pth.py` to generate the paired data for the eight object classes used for model training.
+
+The preprocessing scripts are aligned to the available partial set in `shapenet_dim32_sdf`:
+
+```bash
+conda activate bridgeshape
+python data/sdf_2_npy.py
+python data/npy_2_pth.py
+```
+
+Expected layout on this machine:
+
+```text
+/root/autodl-tmp/datasets
+├── shapenet_dim32_df
+├── shapenet_dim32_sdf
+└── control_data
+```
+
+Important notes:
+
+* `data/sdf_2_npy.py` only converts complete-shape `df` files that are actually referenced by the available partial `sdf` files. It does **not** process the full `shapenet_dim32_df` archive.
+* Each generated `.pth` in `control_data` stores a `(partial, complete)` pair as `torch.save((sdf, df), out_file)`.
+* The `partial` tensor comes from `shapenet_dim32_sdf`, while the `complete` tensor comes from the matched `shapenet_dim32_df` sample.
+* After `control_data` has been generated, the intermediate `shapenet_dim32_df_npy` and `shapenet_dim32_sdf_npy` directories can be deleted to reclaim disk space.
 
 Your data structure should be organized as follows before starting the training process:
 
 ```
-BridgeShape
-├── data
-│   ├── 3d_epn
-│   │   ├── 02691156
-│   │   │   ├── 10155655850468db78d106ce0a280f87__0__.pth
-│   │   │   ├── ...  
-│   │   ├── 02933112
-│   │   ├── 03001627
+/root/autodl-tmp/datasets
+├── control_data
+│   ├── 02691156
+│   │   ├── 10155655850468db78d106ce0a280f87__0__.pth
 │   │   ├── ...
-│   │   ├── splits
-│   │   │   ├── train_02691156.txt
-│   │   │   ├── train_02933112.txt
-│   │   │   ├── ...  
-│   │   │   ├── test_02691156.txt
-│   │   │   ├── test_02933112.txt
-│   │   │   ├── ...
+│   ├── 02933112
+│   ├── 03001627
+│   ├── ...
+│   ├── splits
+│   │   ├── train_02691156.txt
+│   │   ├── train_02933112.txt
+│   │   ├── ...
+│   │   ├── test_02691156.txt
+│   │   ├── test_02933112.txt
+│   │   ├── ...
 ```
 
 ## 🚀 Training
