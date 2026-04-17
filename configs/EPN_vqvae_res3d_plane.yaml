@@ -1,6 +1,6 @@
 vqvae:
   vq_conf: configs/vqvae_snet.yaml
-  vq_ckpt: /root/autodl-tmp/projects/BridgeShape/logs_home_32/vqvae-ControlledEPNDataset_32-02691156plane-all-res32-LR1e-4-T3.0-1epoch-test/ckpt/vqvae_steps-latest.pth
+  vq_ckpt: logs_home_32/vqvae-ControlledEPNDataset_32-02691156plane-all-res32-LR1e-4-T3.0-release/ckpt/vqvae_steps-199650.pth
 data:
   data_root: /root/autodl-tmp/datasets/control_data
   workers: 2
