@@ -104,6 +104,8 @@ bash scripts/train_vqvae_snet_*.sh
 ```
 Note: The script handles both training and testing. The best performing weights will be automatically saved to ```ckps/vqvae_epoch-best.pth```.
 
+On the current machine (`RTX 4080 32GB`, single GPU), the `02691156` Stage 1 script has been smoke-tested with `batch_size=48`. `batch_size=52` and above triggered CUDA OOM in the first few iterations, so `48` is the current single-GPU recommendation.
+
 ### Stage 2: Train Latent Diffusion Schrödinger Bridge
 Once the VQ-VAE is trained, you can train the diffusion bridge model using the configuration files located in the ```configs/``` directory.
 ```angular2html
@@ -111,6 +113,8 @@ CUDA_VISIBLE_DEVICES=0 python train_vqsdf.py \
     --save_dir [YOUR_SAVE_DIRECTORY] \
     --config configs/[YOUR_CONFIG].yaml
 ```
+
+For the `02691156` plane configuration on the current machine, `configs/EPN_vqvae_res3d_plane.yaml` has been validated with single-GPU `training.bs=62` and `evaluation.bs=31`. `training.bs=64` caused CUDA OOM during backpropagation, so `62` is the current single-GPU recommendation.
 
 ## 🔍 Inference / Testing
 To evaluate your trained BridgeShape model, run the testing script with your desired sampling configurations:

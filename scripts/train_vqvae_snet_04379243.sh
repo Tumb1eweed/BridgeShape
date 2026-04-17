@@ -7,21 +7,18 @@ DATE_WITH_TIME=`date "+%Y-%m-%dT%H-%M-%S"`
 logs_dir='../logs_home_32'
 
 ### set gpus ###
-gpu_ids=6
+gpu_ids="${GPU_IDS:-0}"
 
-if [ ${#gpu_ids} -gt 1 ]; then
-    # specify these two if multi-gpu
-    # NGPU=2
-    NGPU=2
-    # NGPU=4
-    PORT=11768
-    echo "HERE"
+if [[ "${gpu_ids}" == *,* ]]; then
+    IFS=',' read -ra GPU_LIST <<< "${gpu_ids}"
+    NGPU=${#GPU_LIST[@]}
+    PORT="${PORT:-11768}"
 fi
 ################
 
 ### hyper params ###
 lr=1e-4
-batch_size=24
+batch_size="${BATCH_SIZE:-24}"
 ####################
 
 ### model stuff ###
@@ -94,7 +91,7 @@ fi
 
 
 multi_gpu=0
-if [ ${#gpu_ids} -gt 1 ]; then
+if [[ "${gpu_ids}" == *,* ]]; then
     multi_gpu=1
 fi
 
