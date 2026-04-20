@@ -116,6 +116,71 @@ CUDA_VISIBLE_DEVICES=0 python train_vqsdf.py \
 
 For the `02691156` plane configuration on the current machine, `configs/EPN_vqvae_res3d_plane.yaml` has been validated with single-GPU `training.bs=62` and `evaluation.bs=31`. `training.bs=64` caused CUDA OOM during backpropagation, so `62` is the current single-GPU recommendation.
 
+### One-Epoch Smoke Test for Network Changes
+When changing the VQ-VAE, diffusion bridge, or shared network blocks, use the `02691156` airplane/plane category as a quick end-to-end check. This verifies that Stage 1 training, Stage 2 training, checkpoint loading, and Stage 2 evaluation all run before starting a full experiment.
+
+The `02691156` split contains `19,800` training samples and `4,470` test samples. On the current single-GPU setup, one data epoch is:
+
+* Stage 1 VQ-VAE: `ceil(19800 / 48) = 413` steps.
+* Stage 2 bridge: `ceil(19800 / 62) = 320` steps.
+
+Run Stage 1 for one epoch and save a checkpoint at the final step:
+
+```bash
+conda activate bridgeshape
+cd /root/autodl-tmp/BridgeShape/scripts
+OMP_NUM_THREADS=1 \
+BATCH_SIZE=48 \
+TOTAL_ITERS=413 \
+SAVE_STEPS_FREQ=413 \
+PRINT_FREQ=50 \
+DISPLAY_FREQ=250000 \
+bash train_vqvae_snet_02691156.sh
+```
+
+Expected Stage 1 checkpoint:
+
+```text
+/root/autodl-tmp/BridgeShape/logs_home_32/vqvae-ControlledEPNDataset_32-02691156plane-all-res32-LR1e-4-T3.0-release/ckpt/vqvae_steps-413.pth
+```
+
+Run Stage 2 for one epoch with the smoke-test config:
+
+```bash
+cd /root/autodl-tmp/BridgeShape
+OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0 python train_vqsdf.py \
+    --save_dir outputs/one_epoch_02691156 \
+    --config configs/EPN_vqvae_res3d_plane_stage2_1epoch.yaml \
+    --name EPN_vqvae_res3d_plane_stage2_1epoch
+```
+
+Expected Stage 2 checkpoint:
+
+```text
+outputs/one_epoch_02691156/EPN_vqvae_res3d_plane_stage2_1epoch/step_320.pth
+```
+
+Evaluate the Stage 2 checkpoint on the full `02691156` test split:
+
+```bash
+OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0 python test_vqsdf.py \
+    --save_dir outputs/one_epoch_02691156 \
+    --config configs/EPN_vqvae_res3d_plane_stage2_1epoch.yaml \
+    --name EPN_vqvae_res3d_plane_stage2_1epoch \
+    --rs 1 \
+    --tbs 10 \
+    --test_start_epoch 7 \
+    --test_one true
+```
+
+The `--test_start_epoch 7` value is chosen so that the current test script resolves to `step_320.pth` with `training.log_interval=50` and `training.save_interval=320`. Results are appended to:
+
+```text
+outputs/one_epoch_02691156/1_steps/result.txt
+```
+
+This smoke test is intended to catch runtime breakage, tensor shape mismatches, checkpoint incompatibilities, and obvious CUDA memory issues. A one-epoch run is not expected to produce final-quality metrics.
+
 ## 🔍 Inference / Testing
 To evaluate your trained BridgeShape model, run the testing script with your desired sampling configurations:
 ```angular2html

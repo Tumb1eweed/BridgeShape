@@ -44,10 +44,10 @@ representation='tsdf'
 ###########################
 
 ### display & log stuff ###
-display_freq=250000 # default: display_current_results
-print_freq=1000 # default: print_current_errors
-total_iters=250000 #100000000
-save_steps_freq=1650 #print_current_metrics
+display_freq="${DISPLAY_FREQ:-250000}" # default: display_current_results
+print_freq="${PRINT_FREQ:-1000}" # default: print_current_errors
+total_iters="${TOTAL_ITERS:-250000}" #100000000
+save_steps_freq="${SAVE_STEPS_FREQ:-1650}" #print_current_metrics
 ###########################
 
 today=$(date '+%m%d')
