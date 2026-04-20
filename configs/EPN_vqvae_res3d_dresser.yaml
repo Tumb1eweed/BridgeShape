@@ -36,7 +36,7 @@ training:
   grad_clip:
     enabled: true
     value: 1.0
-  bs: 40
+  bs: 32
   overfit: false
   amp: true
   steps: 97000

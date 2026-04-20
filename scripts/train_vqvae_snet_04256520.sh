@@ -18,7 +18,7 @@ fi
 
 ### hyper params ###
 lr=1e-4
-batch_size="${BATCH_SIZE:-24}"
+batch_size="${BATCH_SIZE:-32}"
 ####################
 
 ### model stuff ###

@@ -18,7 +18,7 @@ fi
 
 ### hyper params ###
 lr=1e-4
-batch_size="${BATCH_SIZE:-24}"
+batch_size="${BATCH_SIZE:-32}"
 ####################
 
 ### model stuff ###
@@ -107,5 +107,4 @@ echo "CUDA_VISIBLE_DEVICES=${gpu_ids} python ${cmd}"
 # exit
 
 CUDA_VISIBLE_DEVICES=${gpu_ids} python ${cmd}
-
 

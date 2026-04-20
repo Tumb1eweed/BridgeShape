@@ -16,7 +16,7 @@ def get_shape_sdf(path):
 
 if __name__ == '__main__':
 
-    data_root = "/root/autodl-tmp/datasets"
+    data_root = os.environ.get("DATA_ROOT", "/root/autodl-tmp/datasets")
     base_df_path = osp.join(data_root, "shapenet_dim32_df")
     out_df_path = osp.join(data_root, "shapenet_dim32_df_npy")
     base_sdf_path = osp.join(data_root, "shapenet_dim32_sdf")
@@ -53,4 +53,3 @@ if __name__ == '__main__':
             os.makedirs(out_cls_path, exist_ok=True)
             out_file = osp.join(out_cls_path, sdf_name + '.npy')
             np.save(out_file, sdf)
-

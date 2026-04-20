@@ -6,7 +6,7 @@ import os.path as osp
 import torch
 
 if __name__ == '__main__':
-    data_root = "/root/autodl-tmp/datasets"
+    data_root = os.environ.get("DATA_ROOT", "/root/autodl-tmp/datasets")
     sdf_path = osp.join(data_root, "shapenet_dim32_sdf_npy")
     df_path = osp.join(data_root, "shapenet_dim32_df_npy")
     out_path = osp.join(data_root, "control_data")
