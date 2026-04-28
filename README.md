@@ -16,6 +16,12 @@ Official implementation of the paper **"BridgeShape: Latent Diffusion Schröding
 
 The verified environment for this repository is a Conda environment named `bridgeshape` with `Python 3.10`, `PyTorch 2.4.1`, `CUDA 12.1`, and the prebuilt `PyTorch3D 0.7.8` package.
 
+All training, evaluation, data-preparation, and smoke-test commands in this repository should be run from the `bridgeshape` Conda environment:
+
+```bash
+conda activate bridgeshape
+```
+
 Create the environment with:
 
 ```bash

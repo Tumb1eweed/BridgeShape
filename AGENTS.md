@@ -4,6 +4,10 @@
 Core training entry points live at the repository root: `train_vq.py` for VQ-VAE and `train_vqsdf.py` / `test_vqsdf.py` for the diffusion bridge pipeline. Model code is under `models/`, with reusable network blocks in `models/modules/` and VQ-specific code in `models/models_vq/`. Dataset loading lives in `datasets/` and `dataloaders/`. Config files are in `configs/`, category-specific shell launchers are in `scripts/`, and data preparation helpers are in `data/`.
 
 ## Build, Test, and Development Commands
+Run project commands from the `bridgeshape` Conda environment:
+```bash
+conda activate bridgeshape
+```
 Install Python dependencies with:
 ```bash
 pip install -r requirements.txt
